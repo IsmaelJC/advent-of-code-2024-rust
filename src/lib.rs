@@ -27,11 +27,10 @@ pub fn get_frequencies<T>(iter: impl IntoIterator<Item = T>) -> HashMap<T, usize
 where
     T: Eq + Hash,
 {
-    let mut map = HashMap::new();
-    for item in iter {
+    iter.into_iter().fold(HashMap::new(), |mut map, item| {
         map.entry(item)
             .and_modify(|counter| *counter += 1)
             .or_insert(1);
-    }
-    map
+        map
+    })
 }
