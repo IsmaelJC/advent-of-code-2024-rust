@@ -1,6 +1,5 @@
+use advent_of_code_2024_rust::{get_copy_without_element_at_index, read_input, split_lines};
 use std::convert::identity;
-
-use advent_of_code_2024_rust::{read_input, split_lines};
 
 #[derive(Clone, Copy)]
 enum ReportMonotonicity {
@@ -53,10 +52,29 @@ fn report_is_safe(report: &[u32]) -> bool {
     }
 }
 
-fn get_number_of_safe_reports(reports: &Vec<Vec<u32>>) -> usize {
+fn get_number_of_safe_reports(reports: &[Vec<u32>]) -> usize {
     reports
         .iter()
         .filter(|report| report_is_safe(report))
+        .count()
+}
+
+fn generate_problem_dampener_variations(report: &[u32]) -> Vec<Vec<u32>> {
+    (0..report.len())
+        .map(|i| get_copy_without_element_at_index(report, i))
+        .collect()
+}
+
+fn at_least_one_problem_dampener_variation_is_safe(report: &[u32]) -> bool {
+    generate_problem_dampener_variations(report)
+        .iter()
+        .any(|variation| report_is_safe(variation))
+}
+
+fn get_number_of_problem_dampener_safe_reports(reports: &[Vec<u32>]) -> usize {
+    reports
+        .iter()
+        .filter(|report| at_least_one_problem_dampener_variation_is_safe(report))
         .count()
 }
 
@@ -68,6 +86,11 @@ fn main() {
         .collect();
 
     let ans_part_one = get_number_of_safe_reports(&reports);
+    let ans_part_two = get_number_of_problem_dampener_safe_reports(&reports);
 
-    println!("The number of safe reports is: {}", ans_part_one)
+    println!("The number of safe reports is: {}", ans_part_one);
+    println!(
+        "When using the Problem Dampener the number of safe reports is: {}",
+        ans_part_two
+    );
 }

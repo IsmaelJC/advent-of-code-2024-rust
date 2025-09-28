@@ -34,3 +34,11 @@ where
         map
     })
 }
+
+pub fn get_copy_without_element_at_index<T: Clone>(v: &[T], idx: usize) -> Vec<T> {
+    v.iter()
+        .enumerate()
+        .filter(|(i, _)| *i != idx)
+        .map(|(_, t)| t.clone())
+        .collect()
+}
